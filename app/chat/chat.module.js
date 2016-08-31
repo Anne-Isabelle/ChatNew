@@ -1,5 +1,5 @@
 var chat = angular.module("chatApp", []);
-chat.controller("chatController", function($scope){
+chat.controller("chatController", function($scope, msgService, botService){
 	$scope.messages = [{
 		pseudo: "",
 		message: ""
@@ -12,9 +12,15 @@ chat.controller("chatController", function($scope){
 			message:$scope.userMsg
 		};
 		$scope.messages.push(newMessage);
-		$scope.userPseudo = "";
 		$scope.userMsg = "";
-	};
+		msgService.addMessage(newMessage);
+
+		for(var i = 0; i<botService.dictionnary.length; i++){
+			if(msgService.allMessages[msgService.allMessages.length-1].message == botService.dictionnary[i].word){
+				$scope.messages.push({pseudo:"bot", message: botService.dictionnary[i].response});
+			}
+		}
+	};	
 
 });
 
